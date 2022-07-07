@@ -78,7 +78,7 @@ export function BuscadorConsumer(props) {
     const { search, setSearch } = useContext(BuscadorContext);
     return(  
         <div className="center-a" style={{paddingTop: '100px'}}>
-            <TextField className={classes.textField} type="text" onChange={(e) => setSearch(e.target.value)}/>        
+            <TextField placeholder="Busqueda..." className={classes.textField} type="text" onChange={(e) => setSearch(e.target.value)}/>        
         </div>                
     )
 }
