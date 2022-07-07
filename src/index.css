@@ -24,7 +24,8 @@ code {
 
 .container-one {
   width: 100%;
-  height: 100vh;
+  height: auto;
+  padding-top: 50px;
 }
 
 .btn-left {
@@ -143,4 +144,9 @@ code {
 
 .btn-info:hover {
   background: royalblue;
+}
+
+.center-a-poke {
+  display: flex;
+  justify-content: center;
 }

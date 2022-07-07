@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { CircularProgress, Tooltip } from '@mui/material';
 import { TransitionGroup } from 'react-transition-group';
 import {
@@ -7,6 +7,7 @@ import {
   createTheme
 } from '@mui/material/styles';
 import './App.css';
+import { BuscadorProvider, BuscadorConsumer, Result } from './context/buscador-context';
 
 const theme = createTheme({
   components: {
@@ -24,7 +25,13 @@ const theme = createTheme({
   }
 });
 
-function App() {  
+export default () => <BuscadorProvider>  
+  <BuscadorConsumer/>
+  <App/>
+</BuscadorProvider>
+
+function App(props) {
+  const info = Result();
   const [pokemon, setPokemon] = useState([]);   
   const [pokemonInfo, setPokemonInfo] = useState([]);   
   const [array, setArray] = useState([]);
@@ -36,15 +43,35 @@ function App() {
 
   useEffect(() => {    
     axios.get(`https://pokeapi.co/api/v2/pokemon?limit=1126`).then(data => {      
-      setPokemonInfo(data.data.results);                          
-    });           
+      setPokemonInfo(data.data.results);      
+      console.log(data.data.results);                    
+    });        
   }, []);
 
   useEffect(() => {
+    if(pokemonInfo.length > 0){
+      pokemonInfo.slice(numberOne, numberTwo).filter((elemento) => {
+        if(elemento.name.toString().toLowerCase().includes(info.search)){
+          setArray([]);
+          const url = elemento.url.split('/');
+          axios.get(`https://pokeapi.co/api/v2/pokemon/${url[6]}`).then(data => {
+            setArray((current) => [...current, {data: data.data}]);            
+          });
+        }
+      });    
+    }
+    console.log(array.length);
+  }, [info]);
+
+  useEffect(() => {
+    pokeChange();
+  }, [pokemonInfo]);
+
+  const pokeChange = () => {
     if(pokemonInfo.length === 1126){
       var position = pokemonInfo.slice(numberOne, numberTwo);
       position.map(m => {
-        const url = m.url.split('/');   
+        const url = m.url.split('/');
         axios.get(`https://pokeapi.co/api/v2/pokemon/${url[6]}`).then(poke => {   
           setArray((current) => [...current, {data: poke.data}]);          
         }).catch(function (e) {
@@ -52,7 +79,7 @@ function App() {
         });
       });
     }
-  }, [pokemonInfo]);
+  }
 
   useEffect(() => {
     if(array.length === 10){
@@ -92,29 +119,29 @@ function App() {
   return(
     <div>
         {
-          array ? (
+          array.length > 0 && (
             <div className='container-one center-a'>
               <div>
-                <div className='center-a'>
+                <div className='center-a-poke'>
                   <TransitionGroup component="ul">
                     {
-                      array.slice(0, 10).map((info, index) => (                      
+                      array.slice(0, 10).map((info, index) => (
                         <ThemeProvider key={index} theme={theme}>
                           <Tooltip title={info.data.name} placement="top">
                             <img className='img-pokemon' src={side === true ? info.data.sprites.back_default ? shiny === true ? info.data.sprites.back_shiny : info.data.sprites.back_default : 'https://i.pinimg.com/originals/ef/72/4f/ef724f2c2cf02a434b8464f17fe40ca1.gif' : info.data.sprites.front_default ? shiny === true ? info.data.sprites.front_shiny : info.data.sprites.front_default : 'https://i.pinimg.com/originals/ef/72/4f/ef724f2c2cf02a434b8464f17fe40ca1.gif'} alt="Not found" width={100} height={100}></img>
                           </Tooltip>
-                        </ThemeProvider>                      
+                        </ThemeProvider>
                       ))
                     }
                   </TransitionGroup>
                 </div>
                 <div className='center-a'>
-                  <button className='btn-left' onClick={(e) => {setNumberOne(numberOne - 10); setNumberTwo(numberTwo - 10);}}></button>
-                  <button className='btn-right' onClick={(e) => {setNumberOne(numberOne + 10); setNumberTwo(numberTwo + 10);}}></button>  
+                  <button className='btn-left' onClick={(e) => { setNumberOne(numberOne - 10); setNumberTwo(numberTwo - 10); }}></button>
+                  <button className='btn-right' onClick={(e) => { setNumberOne(numberOne + 10); setNumberTwo(numberTwo + 10); }}></button>
                 </div>
                 <div className='center-a'>
-                  <button className='golden' onClick={(e) => {setShiny(!shiny)}}></button>
-                  <button className='change' onClick={(e) => {setSide(!side)}}></button>
+                  <button className='golden' onClick={(e) => { setShiny(!shiny) }}></button>
+                  <button className='change' onClick={(e) => { setSide(!side) }}></button>
                 </div>
                 <div className='center-a'>
                   <button className='btn-info' ref={message} onClick={handleChange}>
@@ -125,21 +152,9 @@ function App() {
                   </button>
                 </div>
               </div>
-            </div>
-          ): (
-            <div className='center-a' style={{height: '100vh'}}>
-              <div>
-                <img className='img-pokemon' src='https://i.pinimg.com/originals/ef/72/4f/ef724f2c2cf02a434b8464f17fe40ca1.gif' alt='not found' height={140} width={180}/>
-                <br/>
-                <div className='center-a' style={{margin: '25px 0px 0px 0px'}}>
-                  <CircularProgress/>
-                </div>
-              </div>            
-            </div>
+            </div>      
           )
-        }
+        }             
     </div>    
   )
 }
-
-export default App;
