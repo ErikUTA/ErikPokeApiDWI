@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { useState } from "react";
 import TextField from '@mui/material/TextField';
 import { makeStyles } from '@mui/styles';
+import { useTranslation } from 'react-i18next';
 
 const useStyles = makeStyles(theme => ({
     textField: {
@@ -74,11 +75,12 @@ export function BuscadorProvider(props) {
 }
 
 export function BuscadorConsumer(props) {
+    const { t, i18n } = useTranslation(['translate']);
     const classes = useStyles(props);
     const { search, setSearch } = useContext(BuscadorContext);
     return(  
         <div className="center-a" style={{paddingTop: '100px'}}>
-            <TextField placeholder="Busqueda..." className={classes.textField} type="text" onChange={(e) => setSearch(e.target.value)}/>        
+            <TextField placeholder={t("search")} className={classes.textField} type="text" onChange={(e) => setSearch(e.target.value)}/>            
         </div>                
     )
 }

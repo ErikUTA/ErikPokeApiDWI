@@ -25,10 +25,12 @@ const theme = createTheme({
   }
 });
 
-export default () => <BuscadorProvider>  
-  <BuscadorConsumer/>
-  <App/>
-</BuscadorProvider>
+export default () => <div className='center-b'>
+  <BuscadorProvider>  
+    <BuscadorConsumer/>
+    <App/>
+  </BuscadorProvider>
+</div>
 
 function App(props) {
   const info = Result();
@@ -43,8 +45,7 @@ function App(props) {
 
   useEffect(() => {    
     axios.get(`https://pokeapi.co/api/v2/pokemon?limit=1126`).then(data => {      
-      setPokemonInfo(data.data.results);      
-      console.log(data.data.results);                    
+      setPokemonInfo(data.data.results);                             
     });        
   }, []);
 
@@ -60,7 +61,6 @@ function App(props) {
         }
       });    
     }
-    console.log(array.length);
   }, [info]);
 
   useEffect(() => {
@@ -128,7 +128,7 @@ function App(props) {
                       array.slice(0, 10).map((info, index) => (
                         <ThemeProvider key={index} theme={theme}>
                           <Tooltip title={info.data.name} placement="top">
-                            <img className='img-pokemon' src={side === true ? info.data.sprites.back_default ? shiny === true ? info.data.sprites.back_shiny : info.data.sprites.back_default : 'https://i.pinimg.com/originals/ef/72/4f/ef724f2c2cf02a434b8464f17fe40ca1.gif' : info.data.sprites.front_default ? shiny === true ? info.data.sprites.front_shiny : info.data.sprites.front_default : 'https://i.pinimg.com/originals/ef/72/4f/ef724f2c2cf02a434b8464f17fe40ca1.gif'} alt="Not found" width={100} height={100}></img>
+                            <img onClick={(e) => {window.location.href = `/pokemons/${info.data.id}`}} className='img-pokemon' src={side === true ? info.data.sprites.back_default ? shiny === true ? info.data.sprites.back_shiny : info.data.sprites.back_default : 'https://i.pinimg.com/originals/ef/72/4f/ef724f2c2cf02a434b8464f17fe40ca1.gif' : info.data.sprites.front_default ? shiny === true ? info.data.sprites.front_shiny : info.data.sprites.front_default : 'https://i.pinimg.com/originals/ef/72/4f/ef724f2c2cf02a434b8464f17fe40ca1.gif'} alt="Not found" width={100} height={100}></img>                            
                           </Tooltip>
                         </ThemeProvider>
                       ))
