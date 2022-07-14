@@ -21,10 +21,6 @@ const Sidebar = () => {
     menuCollapse ? setMenuCollapse(false) : setMenuCollapse(true);
   }
 
-  useEffect(() => {
-    console.log(total);
-  }, []);
-
   return (
     <>
       <div className="sidebar">
