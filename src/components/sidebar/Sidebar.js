@@ -19,7 +19,7 @@ const Sidebar = () => {
   const [menuCollapse, setMenuCollapse] = useState(false)
   const menuIconClick = () => {
     menuCollapse ? setMenuCollapse(false) : setMenuCollapse(true);
-  }
+  } 
 
   return (
     <>
