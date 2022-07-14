@@ -10,8 +10,8 @@ import {
 import Button from "@mui/material/Button";
 import { useTranslation } from 'react-i18next';
 import { FiArrowLeftCircle, FiArrowRightCircle } from "react-icons/fi";
-import "react-pro-sidebar/dist/css/styles.css";
 import { Number } from "../../context/message-context";
+import "react-pro-sidebar/dist/css/styles.css";
 
 const Sidebar = () => {
   const total = Number();
