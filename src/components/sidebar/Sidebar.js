@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ProSidebar,
   Menu,
@@ -11,13 +11,19 @@ import Button from "@mui/material/Button";
 import { useTranslation } from 'react-i18next';
 import { FiArrowLeftCircle, FiArrowRightCircle } from "react-icons/fi";
 import "react-pro-sidebar/dist/css/styles.css";
+import { Number } from "../../context/message-context";
 
 const Sidebar = () => {
+  const total = Number();
   const { t, i18n } = useTranslation(['translate']);
   const [menuCollapse, setMenuCollapse] = useState(false)
   const menuIconClick = () => {
     menuCollapse ? setMenuCollapse(false) : setMenuCollapse(true);
   }
+
+  useEffect(() => {
+    console.log(total);
+  }, []);
 
   return (
     <>
@@ -41,8 +47,8 @@ const Sidebar = () => {
           </SidebarHeader>
           <SidebarContent>
             <Menu iconShape="square">
-              <MenuItem onClick={(e) => window.location.href = '/'} icon={<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Pok%C3%A9_Ball_icon.svg/1200px-Pok%C3%A9_Ball_icon.svg.png" width={25} height={25}/>}>Pokemones</MenuItem>
-              <MenuItem onClick={(e) => window.location.href = '/190811'} icon={<img src="https://www.svgrepo.com/show/276267/pokemon-trainer-pokemon.svg" width={25} height={25}/>}>Mi perfil</MenuItem>
+              <MenuItem onClick={(e) => window.location.href = '/'} icon={<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Pok%C3%A9_Ball_icon.svg/1200px-Pok%C3%A9_Ball_icon.svg.png" width={25} height={25}/>}>{t("pokemones")}</MenuItem>
+              <MenuItem onClick={(e) => window.location.href = '/190811'} icon={<img src="https://www.svgrepo.com/show/276267/pokemon-trainer-pokemon.svg" width={25} height={25}/>}>{t("miperfil")}</MenuItem>
               <div style={{marginTop: '40px'}}>
                 <Button onClick={(e) => i18n.changeLanguage('en')}>Español</Button>
                 <Button onClick={(e) => i18n.changeLanguage('es')}>Ingles</Button>
@@ -53,7 +59,9 @@ const Sidebar = () => {
             {
               !menuCollapse && (
                 <>
-                  Idioma actual: {t("idioma")}
+                  {t("idioma")}<br/>
+                  {t("totalPokemons")}
+                  {total.pokemons}
                 </>
               )
             }
